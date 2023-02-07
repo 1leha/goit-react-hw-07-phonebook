@@ -2,8 +2,7 @@ import React from 'react';
 
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContactReducer } from '../../redux/contactsSlice';
-import { getContacts } from '../../redux/selectors';
+import { sellectContacts } from '../../redux/selectors';
 import { clearFilterReducer } from '../../redux/filterSlice';
 
 // icons
@@ -12,16 +11,17 @@ import { MdDelete } from 'react-icons/md';
 // components
 import { Box } from '../Box';
 import { ContactButtonStyled } from './Contact.styled';
+import { deleteContact } from 'redux/contacts/contactsOperations';
 
 const Contact = ({ contactId, name, phone }) => {
   const dispatch = useDispatch();
 
-  const { contacts } = useSelector(getContacts);
+  const items = useSelector(sellectContacts);
 
-  const deleteContact = contactId => {
-    dispatch(deleteContactReducer(contactId));
+  const deleteHendler = contactId => {
+    dispatch(deleteContact(contactId));
 
-    const isPhonebookEmpty = contacts.length === 1;
+    const isPhonebookEmpty = items.length === 1;
 
     if (isPhonebookEmpty) {
       dispatch(clearFilterReducer());
@@ -34,7 +34,7 @@ const Contact = ({ contactId, name, phone }) => {
       <ContactButtonStyled
         type="button"
         aria-label="Delete contact"
-        onClick={() => deleteContact(contactId)}
+        onClick={() => deleteHendler(contactId)}
       >
         <MdDelete size="25" />
       </ContactButtonStyled>

@@ -6,7 +6,7 @@ import {
   inputFilterReducer,
   clearFilterReducer,
 } from '../../redux/filterSlice';
-import { getFilter } from '../../redux/selectors';
+import { sellectFilter } from '../../redux/selectors';
 
 // icons
 import { TiDelete } from 'react-icons/ti';
@@ -18,7 +18,7 @@ import { LabelStyled, InputStyled, ButtonStyled } from './Filter.styled';
 const Filter = () => {
   const dispatch = useDispatch();
 
-  const filter = useSelector(getFilter);
+  const filter = useSelector(sellectFilter);
 
   // Filter methods
   const handleChangeFilter = e => {

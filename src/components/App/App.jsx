@@ -1,9 +1,13 @@
+import { useEffect } from 'react';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { clearAllContactReducer } from '../../redux/contactsSlice';
 import { clearFilterReducer } from '../../redux/filterSlice';
-import { getContacts } from '../../redux/selectors';
-import { useFilteredContacts } from '../hooks/useFilteredContacts';
+import {
+  sellectError,
+  sellectFilteredContacts,
+  sellectIsLoading,
+  sellectIsPhonebookEmpty,
+} from '../../redux/selectors';
 
 // icons
 import { AiOutlineClear } from 'react-icons/ai';
@@ -25,21 +29,30 @@ import {
   VersionStyled,
 } from './App.styled';
 
+// Operations
+import {
+  clearAllContact,
+  fetchContacts,
+} from 'redux/contacts/contactsOperations';
+
 // App
 export const App = () => {
   const dispatch = useDispatch();
-  const { contacts } = useSelector(getContacts);
-  const filteredContacts = useFilteredContacts();
+  const isLoading = useSelector(sellectIsLoading);
+  const error = useSelector(sellectError);
+  const { isFilteredContactsEmpty } = useSelector(sellectFilteredContacts);
+  const isPhonebookEmpty = useSelector(sellectIsPhonebookEmpty);
 
   const { isEmptyBook, noMatches } = message;
 
-  const isPhonebookEmpty = contacts.length === 0;
-  const isFilteredContactsEmpty = filteredContacts.length === 0;
-
-  const clearAllContact = () => {
-    dispatch(clearAllContactReducer());
+  const clearAllContactHandler = () => {
+    dispatch(clearAllContact());
     dispatch(clearFilterReducer());
   };
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <Box
@@ -53,38 +66,47 @@ export const App = () => {
     >
       <Box position="relative">
         <AppTitleStyled>My phonebook</AppTitleStyled>
-        <VersionStyled>Redux. Redux-persist.</VersionStyled>
+        <VersionStyled>Redux. Mockapi.io</VersionStyled>
       </Box>
 
       <AppStyled>
+        {/* Section Contacts editor */}
         <Section title="Contacts editor">
           <PhonebookEditor />
         </Section>
 
-        <Section title="Contacts">
-          <ClearButtonStyled
-            type="button"
-            aria-label="Clear all contacts"
-            disabled={isPhonebookEmpty}
-            onClick={clearAllContact}
-          >
-            <AiOutlineClear size="30" />
-          </ClearButtonStyled>
+        {/* Simple spiner */}
+        <Box display="block" height="20px" textAlign="center" color="red">
+          {isLoading && <div>Loading...</div>}
+        </Box>
 
-          {isPhonebookEmpty ? (
-            <Notification message={isEmptyBook} />
-          ) : (
-            <>
-              <Filter />
+        {/* Section Contacts */}
+        {!error && (
+          <Section title="Contacts">
+            <ClearButtonStyled
+              type="button"
+              aria-label="Clear all contacts"
+              disabled={isPhonebookEmpty}
+              onClick={clearAllContactHandler}
+            >
+              <AiOutlineClear size="30" />
+            </ClearButtonStyled>
 
-              {isFilteredContactsEmpty ? (
-                <Notification message={noMatches} />
-              ) : (
-                <ContactList />
-              )}
-            </>
-          )}
-        </Section>
+            {isPhonebookEmpty ? (
+              <Notification message={isEmptyBook} />
+            ) : (
+              <>
+                <Filter />
+
+                {isFilteredContactsEmpty ? (
+                  <Notification message={noMatches} />
+                ) : (
+                  <ContactList />
+                )}
+              </>
+            )}
+          </Section>
+        )}
       </AppStyled>
     </Box>
   );

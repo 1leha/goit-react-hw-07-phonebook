@@ -2,8 +2,7 @@ import React from 'react';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { addContactReducer } from '../../redux/contactsSlice';
-import { getContacts } from '../../redux/selectors';
+import { sellectContacts, sellectIsContactExist } from '../../redux/selectors';
 
 // formik
 import { Formik, Form, ErrorMessage } from 'formik';
@@ -22,6 +21,8 @@ import {
   ButtonIconStyled,
 } from './PhonebookEditor.styled';
 
+import { addContact } from 'redux/contacts/contactsOperations';
+
 const validationShema = yup.object().shape({
   name: yup
     .string()
@@ -35,10 +36,10 @@ const validationShema = yup.object().shape({
 
 const PhonebookEditor = () => {
   const dispatch = useDispatch();
-  const { contacts } = useSelector(getContacts);
+  const items = useSelector(sellectContacts);
 
   const isContactExist = abonentName => {
-    return contacts.find(({ name }) => name === abonentName);
+    return items.find(({ name }) => name === abonentName);
   };
 
   const handelSubmit = ({ name, phone }, { resetForm }) => {
@@ -47,7 +48,7 @@ const PhonebookEditor = () => {
       return;
     }
 
-    dispatch(addContactReducer({ name, phone }));
+    dispatch(addContact({ name, phone }));
 
     resetForm();
   };
