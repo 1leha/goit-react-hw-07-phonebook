@@ -40,9 +40,9 @@ export const App = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(sellectIsLoading);
   const error = useSelector(sellectError);
-  const { isFilteredContactsEmpty } = useSelector(sellectFilteredContacts);
+  const filteredContacts = useSelector(sellectFilteredContacts);
   const isPhonebookEmpty = useSelector(sellectIsPhonebookEmpty);
-
+  const isFilteredContactsEmpty = filteredContacts.length === 0;
   const { isEmptyBook, noMatches } = message;
 
   const clearAllContactHandler = () => {

@@ -11,14 +11,9 @@ export const sellectFilteredContacts = createSelector(
   (contacts, filter) => {
     const filterNormalized = filter.toLowerCase();
 
-    const filteredContacts = contacts.filter(({ name }) =>
+    return contacts.filter(({ name }) =>
       name.toLowerCase().includes(filterNormalized)
     );
-
-    return {
-      filteredContacts,
-      isFilteredContactsEmpty: filteredContacts.length === 0,
-    };
   }
 );
 

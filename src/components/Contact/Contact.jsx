@@ -16,12 +16,12 @@ import { deleteContact } from 'redux/contacts/contactsOperations';
 const Contact = ({ contactId, name, phone }) => {
   const dispatch = useDispatch();
 
-  const items = useSelector(sellectContacts);
+  const contacts = useSelector(sellectContacts);
 
   const deleteHendler = contactId => {
     dispatch(deleteContact(contactId));
 
-    const isPhonebookEmpty = items.length === 1;
+    const isPhonebookEmpty = contacts.length === 1;
 
     if (isPhonebookEmpty) {
       dispatch(clearFilterReducer());

@@ -4,7 +4,7 @@ import { sellectFilteredContacts } from 'redux/selectors';
 import Contact from '../Contact';
 
 const ContactList = () => {
-  const { filteredContacts } = useSelector(sellectFilteredContacts);
+  const filteredContacts = useSelector(sellectFilteredContacts);
 
   return (
     <ul>
